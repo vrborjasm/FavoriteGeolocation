@@ -2,6 +2,21 @@
   text-align: center;
 }
 
+.header {
+  background: #191919;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.title {
+  color: #ffffff;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.icon {
+  font-size: 2rem;
+}
 .container {
   position: relative;
 }

@@ -7,6 +7,7 @@ import {
   StreetViewPanorama,
 } from "@react-google-maps/api";
 import Geocode from "react-geocode";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
 
 import MarkersList from "./components/MarkersList";
 import CreateMarker from "./components/CreateMarker";
@@ -15,7 +16,7 @@ const libraries = ["places"];
 
 const mapContainerStyle = {
   width: "100vw",
-  height: "100vh",
+  height: "88vh",
 };
 
 const streetViewContainerStyle = {
@@ -98,6 +99,10 @@ function App() {
   };
 
   return (
+    <>
+    <header className="header">
+        <h1 className="title"> <LocationOnIcon />GeoFavorites </h1>
+    </header>
     <div className="container">
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
@@ -141,6 +146,7 @@ function App() {
         ))}
       </GoogleMap>
     </div>
+  </>
   );
 }
 
