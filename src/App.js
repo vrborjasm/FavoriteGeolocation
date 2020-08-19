@@ -12,12 +12,13 @@ import MarkersList from "./components/MarkersList";
 import CreateMarker from "./components/CreateMarker";
 
 const libraries = ["places"];
+
 const mapContainerStyle = {
   width: "100vw",
   height: "100vh",
 };
 
-const mapContainerStyle2 = {
+const streetViewContainerStyle = {
   width: "25vw",
   height: "25vh",
 };
@@ -26,6 +27,11 @@ const center = {
   lat: -33.4372,
   lng: -70.6506,
 };
+
+const options = {
+  disableDefaultUI: true,
+  zoomControl: true
+}
 
 function App() {
   const { isLoaded, loadError } = useLoadScript({
@@ -67,7 +73,10 @@ function App() {
 
   const addMarkers = async () => {
     try {
-      const response = await Geocode.fromLatLng(currentMarker.lat, currentMarker.lng);
+      const response = await Geocode.fromLatLng(
+        currentMarker.lat,
+        currentMarker.lng
+      );
       const address = response.results[0].formatted_address;
       setMarkers((markers) => [
         ...markers,
@@ -78,9 +87,9 @@ function App() {
           time: currentMarker.time,
         },
       ]);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
-    };
+    }
     setCurrentMarker(null);
   };
 
@@ -92,6 +101,7 @@ function App() {
     <div className="container">
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
+        options={options}
         zoom={10}
         center={center}
         onLoad={onMapLoad}
@@ -107,7 +117,7 @@ function App() {
 
         <div className="container-view">
           {selected ? (
-            <GoogleMap mapContainerStyle={mapContainerStyle2}>
+            <GoogleMap mapContainerStyle={streetViewContainerStyle}>
               <StreetViewPanorama position={selected} visible={true} />
             </GoogleMap>
           ) : null}
@@ -126,6 +136,7 @@ function App() {
             key={marker.time.toISOString()}
             position={{ lat: marker.lat, lng: marker.lng }}
             label={marker.address.charAt(0)}
+            onClick={() => panTo(marker.lat, marker.lng)}
           />
         ))}
       </GoogleMap>
