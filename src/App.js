@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./App.css";
 import {
   GoogleMap,
@@ -7,7 +7,8 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 
-/*Import para componente de lista*/ 
+/*Import para componente de lista*/
+
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -16,8 +17,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import ListIcon from "@material-ui/icons/List";
-import IconButton from '@material-ui/core/IconButton';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from "@material-ui/core/IconButton";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -54,11 +55,22 @@ function App() {
   const [currentMarker, setCurrentMarker] = useState();
   const [open, setOpen] = useState(false);
 
+  const mapRef = useRef();
+
   if (loadError) return "Error loading maps";
   if (!isLoaded) return "Loading Maps";
 
   const handleClick = () => {
     setOpen(!open);
+  };
+
+  const onMapLoad = (map) => {
+    mapRef.current = map;
+  };
+
+  const panTo = (lat, lng) => {
+    mapRef.current.panTo({ lat, lng });
+    mapRef.current.setZoom(14);
   };
 
   const currentMarkerMenu = (e) => {
@@ -82,10 +94,8 @@ function App() {
   };
 
   const deleteMarker = (time) => {
-    setMarkers(
-      markers.filter(marker => marker.time !== time)
-    )
-  }
+    setMarkers(markers.filter((marker) => marker.time !== time));
+  };
 
   return (
     <div>
@@ -105,7 +115,11 @@ function App() {
           <List component="div" disablePadding>
             {markers.length !== 0 ? (
               markers.map((marker) => (
-                <ListItem button className={classes.nested}>
+                <ListItem
+                  button
+                  className={classes.nested}
+                  onClick={() => panTo(marker.lat, marker.lng)}
+                >
                   <ListItemIcon>
                     <LocationOnIcon />
                   </ListItemIcon>
@@ -113,7 +127,11 @@ function App() {
                     primary={`lat ${marker.lat} lng ${marker.lng}`}
                   />
                   <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete" onClick={() => deleteMarker(marker.time)}>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => deleteMarker(marker.time)}
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
@@ -131,6 +149,7 @@ function App() {
         mapContainerStyle={mapContainerStyle}
         zoom={8}
         center={center}
+        onLoad={onMapLoad}
         onClick={currentMarkerMenu}
       >
         {currentMarker ? (
