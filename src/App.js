@@ -19,24 +19,34 @@ const center = {
 
 function App() {
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyAeuN7UAZwpM7WLI8G217kTZ5dx3vE66oY",
+    googleMapsApiKey: "AIzaSyBeFqP05GTg214Khe2v_84ZT3zGy-no_L4",
     libraries,
   });
 
   const [markers, setMarkers] = useState([]);
+  const [currentMarker, setCurrentMarker] = useState();
 
   if (loadError) return "Error loading maps";
   if (!isLoaded) return "Loading Maps";
 
-  const addMarkers = (e) => {
+  const currentMarkerMenu = (e) => {
+    setCurrentMarker({
+      lat: e.latLng.lat(),
+      lng: e.latLng.lng(),
+      time: new Date(),
+    });
+  };
+
+  const addMarkers = () => {
     setMarkers((markers) => [
       ...markers,
       {
-        lat: e.latLng.lat(),
-        lng: e.latLng.lng(),
-        time: new Date(),
+        lat: currentMarker.lat,
+        lng: currentMarker.lng,
+        time: currentMarker.time,
       },
     ]);
+    setCurrentMarker(null);
   };
 
   return (
@@ -45,8 +55,34 @@ function App() {
         mapContainerStyle={mapContainerStyle}
         zoom={8}
         center={center}
-        onClick={addMarkers}
+        onClick={currentMarkerMenu}
       >
+        {currentMarker ? (
+          <div>
+            <Marker
+              key={currentMarker.time.toISOString()}
+              position={{ lat: currentMarker.lat, lng: currentMarker.lng }}
+            />
+            <InfoWindow
+              position={{ lat: currentMarker.lat, lng: currentMarker.lng }}
+              onCloseClick={() => {
+                setCurrentMarker(null);
+              }}
+            >
+              <div>
+                <h4>Agregar punto?</h4>
+                <a href="#" onClick={addMarkers}>
+                  Si
+                </a> <br></br>
+                <a href="#"
+                onClick={() => {
+                  setCurrentMarker(null);
+                }}
+                >No</a>
+              </div>
+            </InfoWindow>
+          </div>
+        ) : null}
         {markers.map((marker) => (
           <Marker
             key={marker.time.toISOString()}
