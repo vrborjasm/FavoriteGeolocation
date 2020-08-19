@@ -67,7 +67,7 @@ function App() {
 
   const addMarkers = () => {
     Geocode.fromLatLng(currentMarker.lat, currentMarker.lng).then(
-      response => {
+      (response) => {
         const address = response.results[0].formatted_address;
         setMarkers((markers) => [
           ...markers,
@@ -79,7 +79,7 @@ function App() {
           },
         ]);
       },
-      error => {
+      (error) => {
         console.error(error);
       }
     );
@@ -127,6 +127,7 @@ function App() {
           <Marker
             key={marker.time.toISOString()}
             position={{ lat: marker.lat, lng: marker.lng }}
+            label={marker.address.charAt(0)}
           />
         ))}
       </GoogleMap>

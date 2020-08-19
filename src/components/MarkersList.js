@@ -24,8 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MarkersList = ({markers, panTo, deleteMarker}) => {
-  
+const MarkersList = ({ markers, panTo, deleteMarker }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -33,55 +32,53 @@ const MarkersList = ({markers, panTo, deleteMarker}) => {
     setOpen(!open);
   };
 
-  return ( 
+  return (
     <List
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-        className={classes.root}
-      >
-        <ListItem button onClick={handleClick}>
-          <ListItemIcon>
-            <ListIcon />
-          </ListItemIcon>
-          <ListItemText primary="Marker List" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {markers.length !== 0 ? (
-              markers.map((marker) => (
-                <ListItem
-                  button
-                  className={classes.nested}
-                  onClick={() => panTo(marker.lat, marker.lng)}
-                  key={marker.time}
-                >
-                  <ListItemIcon>
-                    <LocationOnIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={marker.address}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => deleteMarker(marker.time)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))
-            ) : (
-              <ListItem button className={classes.nested}>
-                <ListItemText primary="No hay ningun marcador" />
+      component="nav"
+      aria-labelledby="nested-list-subheader"
+      className={classes.root}
+    >
+      <ListItem button onClick={handleClick}>
+        <ListItemIcon>
+          <ListIcon />
+        </ListItemIcon>
+        <ListItemText primary="Marker List" />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItem>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          {markers.length !== 0 ? (
+            markers.map((marker) => (
+              <ListItem
+                button
+                className={classes.nested}
+                onClick={() => panTo(marker.lat, marker.lng)}
+                key={marker.time}
+              >
+                <ListItemIcon>
+                  <LocationOnIcon />
+                </ListItemIcon>
+                <ListItemText primary={marker.address} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => deleteMarker(marker.time)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
               </ListItem>
-            )}
-          </List>
-        </Collapse>
-      </List>
-   );
-}
- 
+            ))
+          ) : (
+            <ListItem button className={classes.nested}>
+              <ListItemText primary="No hay ningun marcador" />
+            </ListItem>
+          )}
+        </List>
+      </Collapse>
+    </List>
+  );
+};
+
 export default MarkersList;
