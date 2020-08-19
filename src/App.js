@@ -5,40 +5,21 @@ import {
   useLoadScript,
   Marker,
   InfoWindow,
+  StreetViewPanorama,
 } from "@react-google-maps/api";
 
-/*Import para componente de lista*/
-
-import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Collapse from "@material-ui/core/Collapse";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import ListIcon from "@material-ui/icons/List";
-import IconButton from "@material-ui/core/IconButton";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import DeleteIcon from "@material-ui/icons/Delete";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    maxWidth: 460,
-    backgroundColor: theme.palette.background.paper,
-  },
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-}));
-
+import MarkersList from "./components/MarkersList";
 const libraries = ["places"];
 const mapContainerStyle = {
   width: "100vw",
   height: "100vh",
 };
+
+const mapContainerStyle2 = {
+  width: "25vw",
+  height: "25vh",
+};
+
 const center = {
   lat: -33.4372,
   lng: -70.6506,
@@ -50,19 +31,15 @@ function App() {
     libraries,
   });
 
-  const classes = useStyles();
+  
   const [markers, setMarkers] = useState([]);
   const [currentMarker, setCurrentMarker] = useState();
-  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState();
 
   const mapRef = useRef();
 
   if (loadError) return "Error loading maps";
   if (!isLoaded) return "Loading Maps";
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
 
   const onMapLoad = (map) => {
     mapRef.current = map;
@@ -71,6 +48,10 @@ function App() {
   const panTo = (lat, lng) => {
     mapRef.current.panTo({ lat, lng });
     mapRef.current.setZoom(14);
+    setSelected({
+      lat,
+      lng,
+    });
   };
 
   const currentMarkerMenu = (e) => {
@@ -99,52 +80,11 @@ function App() {
 
   return (
     <div>
-      <List
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-        className={classes.root}
-      >
-        <ListItem button onClick={handleClick}>
-          <ListItemIcon>
-            <ListIcon />
-          </ListItemIcon>
-          <ListItemText primary="Marker List" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {markers.length !== 0 ? (
-              markers.map((marker) => (
-                <ListItem
-                  button
-                  className={classes.nested}
-                  onClick={() => panTo(marker.lat, marker.lng)}
-                >
-                  <ListItemIcon>
-                    <LocationOnIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={`lat ${marker.lat} lng ${marker.lng}`}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => deleteMarker(marker.time)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))
-            ) : (
-              <ListItem button className={classes.nested}>
-                <ListItemText primary="No hay ningun marcador" />
-              </ListItem>
-            )}
-          </List>
-        </Collapse>
-      </List>
+      <MarkersList 
+        markers={markers}
+        panTo={panTo}
+        deleteMarker={deleteMarker}
+      />
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={8}
@@ -188,6 +128,9 @@ function App() {
             position={{ lat: marker.lat, lng: marker.lng }}
           />
         ))}
+      </GoogleMap>
+      <GoogleMap mapContainerStyle={mapContainerStyle2}>
+        <StreetViewPanorama position={selected} visible={true} />
       </GoogleMap>
     </div>
   );
