@@ -2,6 +2,23 @@
   text-align: center;
 }
 
+.container {
+  position: relative;
+}
+
+.container-list {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 460px;
+}
+
+.container-view {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

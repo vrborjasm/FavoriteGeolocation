@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, Fragment } from "react";
 import "./App.css";
 import {
   GoogleMap,
@@ -31,7 +31,6 @@ function App() {
     libraries,
   });
 
-  
   const [markers, setMarkers] = useState([]);
   const [currentMarker, setCurrentMarker] = useState();
   const [selected, setSelected] = useState();
@@ -79,12 +78,7 @@ function App() {
   };
 
   return (
-    <div>
-      <MarkersList 
-        markers={markers}
-        panTo={panTo}
-        deleteMarker={deleteMarker}
-      />
+    <div className="container">
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={8}
@@ -92,6 +86,20 @@ function App() {
         onLoad={onMapLoad}
         onClick={currentMarkerMenu}
       >
+        <div className="container-list">
+          <MarkersList
+            markers={markers}
+            panTo={panTo}
+            deleteMarker={deleteMarker}
+          />
+        </div>
+
+        <div className="container-view">
+          <GoogleMap mapContainerStyle={mapContainerStyle2}>
+            <StreetViewPanorama position={selected} visible={true} />
+          </GoogleMap>
+        </div>
+
         {currentMarker ? (
           <div>
             <Marker
@@ -128,9 +136,6 @@ function App() {
             position={{ lat: marker.lat, lng: marker.lng }}
           />
         ))}
-      </GoogleMap>
-      <GoogleMap mapContainerStyle={mapContainerStyle2}>
-        <StreetViewPanorama position={selected} visible={true} />
       </GoogleMap>
     </div>
   );
