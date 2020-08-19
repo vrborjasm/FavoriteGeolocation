@@ -65,24 +65,22 @@ function App() {
     });
   };
 
-  const addMarkers = () => {
-    Geocode.fromLatLng(currentMarker.lat, currentMarker.lng).then(
-      (response) => {
-        const address = response.results[0].formatted_address;
-        setMarkers((markers) => [
-          ...markers,
-          {
-            address,
-            lat: currentMarker.lat,
-            lng: currentMarker.lng,
-            time: currentMarker.time,
-          },
-        ]);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+  const addMarkers = async () => {
+    try {
+      const response = await Geocode.fromLatLng(currentMarker.lat, currentMarker.lng);
+      const address = response.results[0].formatted_address;
+      setMarkers((markers) => [
+        ...markers,
+        {
+          address,
+          lat: currentMarker.lat,
+          lng: currentMarker.lng,
+          time: currentMarker.time,
+        },
+      ]);
+    } catch(err) {
+      console.error(err);
+    };
     setCurrentMarker(null);
   };
 
