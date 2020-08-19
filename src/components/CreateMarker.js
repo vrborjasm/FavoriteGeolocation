@@ -36,7 +36,7 @@ const CreateMarker = ({ currentMarker, addMarkers, setCurrentMarker }) => {
             startIcon={<AddIcon />}
             onClick={addMarkers}
           >
-            Agregar
+            Add
           </Button>
           <br></br>
           <Button
@@ -49,7 +49,7 @@ const CreateMarker = ({ currentMarker, addMarkers, setCurrentMarker }) => {
               setCurrentMarker(null);
             }}
           >
-            Cancelar
+            Cancel
           </Button>
         </div>
       </InfoWindow>
