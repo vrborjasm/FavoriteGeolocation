@@ -1,14 +1,15 @@
-import React, { useState, useRef, Fragment } from "react";
+import React, { useState, useRef } from "react";
 import "./App.css";
 import {
   GoogleMap,
   useLoadScript,
   Marker,
-  InfoWindow,
   StreetViewPanorama,
 } from "@react-google-maps/api";
 
 import MarkersList from "./components/MarkersList";
+import CreateMarker from "./components/CreateMarker";
+
 const libraries = ["places"];
 const mapContainerStyle = {
   width: "100vw",
@@ -95,41 +96,21 @@ function App() {
         </div>
 
         <div className="container-view">
-          <GoogleMap mapContainerStyle={mapContainerStyle2}>
-            <StreetViewPanorama position={selected} visible={true} />
-          </GoogleMap>
+          {selected ? (
+            <GoogleMap mapContainerStyle={mapContainerStyle2}>
+              <StreetViewPanorama position={selected} visible={true} />
+            </GoogleMap>
+          ) : null}
         </div>
 
         {currentMarker ? (
-          <div>
-            <Marker
-              key={currentMarker.time.toISOString()}
-              position={{ lat: currentMarker.lat, lng: currentMarker.lng }}
-            />
-            <InfoWindow
-              position={{ lat: currentMarker.lat, lng: currentMarker.lng }}
-              onCloseClick={() => {
-                setCurrentMarker(null);
-              }}
-            >
-              <div>
-                <h4>Agregar punto?</h4>
-                <a href="#" onClick={addMarkers}>
-                  Si
-                </a>{" "}
-                <br></br>
-                <a
-                  href="#"
-                  onClick={() => {
-                    setCurrentMarker(null);
-                  }}
-                >
-                  No
-                </a>
-              </div>
-            </InfoWindow>
-          </div>
+          <CreateMarker
+            currentMarker={currentMarker}
+            addMarkers={addMarkers}
+            setCurrentMarker={setCurrentMarker}
+          />
         ) : null}
+        
         {markers.map((marker) => (
           <Marker
             key={marker.time.toISOString()}
