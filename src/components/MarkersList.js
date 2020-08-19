@@ -54,12 +54,13 @@ const MarkersList = ({markers, panTo, deleteMarker}) => {
                   button
                   className={classes.nested}
                   onClick={() => panTo(marker.lat, marker.lng)}
+                  key={marker.time}
                 >
                   <ListItemIcon>
                     <LocationOnIcon />
                   </ListItemIcon>
                   <ListItemText
-                    primary={`lat ${marker.lat} lng ${marker.lng}`}
+                    primary={marker.address}
                   />
                   <ListItemSecondaryAction>
                     <IconButton

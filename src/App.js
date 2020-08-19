@@ -6,6 +6,7 @@ import {
   Marker,
   StreetViewPanorama,
 } from "@react-google-maps/api";
+import Geocode from "react-geocode";
 
 import MarkersList from "./components/MarkersList";
 import CreateMarker from "./components/CreateMarker";
@@ -31,6 +32,8 @@ function App() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
   });
+
+  Geocode.setApiKey(process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
 
   const [markers, setMarkers] = useState([]);
   const [currentMarker, setCurrentMarker] = useState();
@@ -63,14 +66,23 @@ function App() {
   };
 
   const addMarkers = () => {
-    setMarkers((markers) => [
-      ...markers,
-      {
-        lat: currentMarker.lat,
-        lng: currentMarker.lng,
-        time: currentMarker.time,
+    Geocode.fromLatLng(currentMarker.lat, currentMarker.lng).then(
+      response => {
+        const address = response.results[0].formatted_address;
+        setMarkers((markers) => [
+          ...markers,
+          {
+            address,
+            lat: currentMarker.lat,
+            lng: currentMarker.lng,
+            time: currentMarker.time,
+          },
+        ]);
       },
-    ]);
+      error => {
+        console.error(error);
+      }
+    );
     setCurrentMarker(null);
   };
 
@@ -82,7 +94,7 @@ function App() {
     <div className="container">
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
-        zoom={8}
+        zoom={10}
         center={center}
         onLoad={onMapLoad}
         onClick={currentMarkerMenu}
@@ -110,7 +122,7 @@ function App() {
             setCurrentMarker={setCurrentMarker}
           />
         ) : null}
-        
+
         {markers.map((marker) => (
           <Marker
             key={marker.time.toISOString()}
