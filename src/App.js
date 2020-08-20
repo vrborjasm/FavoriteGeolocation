@@ -107,7 +107,7 @@ function App() {
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         options={options}
-        zoom={10}
+        zoom={12}
         center={center}
         onLoad={onMapLoad}
         onClick={currentMarkerMenu}

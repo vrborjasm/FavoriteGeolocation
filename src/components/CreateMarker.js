@@ -27,7 +27,7 @@ const CreateMarker = ({ currentMarker, addMarkers, setCurrentMarker }) => {
         }}
       >
         <div className="text-center">
-          <h4>Agregar punto?</h4>
+          <h4>Add this marker?</h4>
           <Button
             variant="contained"
             color="primary"

@@ -72,7 +72,7 @@ const MarkersList = ({ markers, panTo, deleteMarker }) => {
             ))
           ) : (
             <ListItem button className={classes.nested}>
-              <ListItemText primary="No hay ningun marcador" />
+              <ListItemText primary="There is no marker" />
             </ListItem>
           )}
         </List>
