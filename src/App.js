@@ -31,8 +31,8 @@ const center = {
 
 const options = {
   disableDefaultUI: true,
-  zoomControl: true
-}
+  zoomControl: true,
+};
 
 function App() {
   const { isLoaded, loadError } = useLoadScript({
@@ -72,12 +72,12 @@ function App() {
     });
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setCurrentMarker({
-        ...currentMarker,
-        [e.target.name] : e.target.value
-    })
-}
+      ...currentMarker,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const addMarkers = async () => {
     try {
@@ -90,7 +90,7 @@ function App() {
         ...markers,
         {
           ...currentMarker,
-          address
+          address,
         },
       ]);
     } catch (err) {
@@ -105,54 +105,60 @@ function App() {
 
   return (
     <>
-    <header className="header">
-        <h1 className="title"> <LocationOnIcon />GeoFavorites </h1>
-    </header>
-    <div className="container">
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        options={options}
-        zoom={12}
-        center={center}
-        onLoad={onMapLoad}
-        onClick={currentMarkerMenu}
-      >
-        <div className="container-list">
-          <MarkersList
-            markers={markers}
-            panTo={panTo}
-            deleteMarker={deleteMarker}
-          />
-        </div>
+      <header className="header">
+        <h1 className="title">
+          {" "}
+          <LocationOnIcon />
+          GeoFavorites{" "}
+        </h1>
+      </header>
+      <div className="container">
+        <GoogleMap
+          mapContainerStyle={mapContainerStyle}
+          options={options}
+          zoom={12}
+          center={center}
+          onLoad={onMapLoad}
+          onClick={currentMarkerMenu}
+        >
+          <div className="container-list">
+            <MarkersList
+              markers={markers}
+              panTo={panTo}
+              deleteMarker={deleteMarker}
+            />
+          </div>
 
-        <div className="container-view">
-          {selected ? (
-            <GoogleMap mapContainerStyle={streetViewContainerStyle}>
-              <StreetViewPanorama position={selected} visible={true} />
-            </GoogleMap>
+          <div className="container-view">
+            {selected ? (
+              <GoogleMap mapContainerStyle={streetViewContainerStyle}>
+                <StreetViewPanorama position={selected} visible={true} />
+              </GoogleMap>
+            ) : null}
+          </div>
+
+          {currentMarker ? (
+            <CreateMarker
+              currentMarker={currentMarker}
+              addMarkers={addMarkers}
+              setCurrentMarker={setCurrentMarker}
+              handleChange={handleChange}
+            />
           ) : null}
-        </div>
 
-        {currentMarker ? (
-          <CreateMarker
-            currentMarker={currentMarker}
-            addMarkers={addMarkers}
-            setCurrentMarker={setCurrentMarker}
-            handleChange={handleChange}
-          />
-        ) : null}
-
-        {markers.map((marker) => (
-          <Marker
-            key={marker.time.toISOString()}
-            position={{ lat: marker.lat, lng: marker.lng }}
-            label={marker.address.charAt(0)}
-            onClick={() => panTo(marker.lat, marker.lng)}
-          />
-        ))}
-      </GoogleMap>
-    </div>
-  </>
+          {markers.map((marker) => (
+            <Marker
+              key={marker.time.toISOString()}
+              position={{ lat: marker.lat, lng: marker.lng }}
+              label={marker.nickname
+                .split(/\s/)
+                .reduce((response, word) => (response += word.slice(0, 1)), "")}
+              onClick={() => panTo(marker.lat, marker.lng)}
+            />
+          ))}
+        </GoogleMap>
+      </div>
+    </>
   );
 }
 
