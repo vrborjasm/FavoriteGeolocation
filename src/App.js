@@ -72,6 +72,13 @@ function App() {
     });
   };
 
+  const handleChange = e => {
+    setCurrentMarker({
+        ...currentMarker,
+        [e.target.name] : e.target.value
+    })
+}
+
   const addMarkers = async () => {
     try {
       const response = await Geocode.fromLatLng(
@@ -82,10 +89,8 @@ function App() {
       setMarkers((markers) => [
         ...markers,
         {
-          address,
-          lat: currentMarker.lat,
-          lng: currentMarker.lng,
-          time: currentMarker.time,
+          ...currentMarker,
+          address
         },
       ]);
     } catch (err) {
@@ -133,6 +138,7 @@ function App() {
             currentMarker={currentMarker}
             addMarkers={addMarkers}
             setCurrentMarker={setCurrentMarker}
+            handleChange={handleChange}
           />
         ) : null}
 

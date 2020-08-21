@@ -58,7 +58,7 @@ const MarkersList = ({ markers, panTo, deleteMarker }) => {
                 <ListItemIcon>
                   <LocationOnIcon />
                 </ListItemIcon>
-                <ListItemText primary={marker.address} />
+                <ListItemText primary={marker.nickname} />
                 <ListItemSecondaryAction>
                   <IconButton
                     edge="end"
